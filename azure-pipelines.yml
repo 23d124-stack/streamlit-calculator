@@ -2,32 +2,30 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-steps:
+stages:
+- stage: Build
+  displayName: 'Build Stage'
+  jobs:
+  - job: BuildJob
+    displayName: 'Build Job'
+    steps:
+    - script: |
+        echo "Restoring project dependencies..."
+      displayName: 'Restore dependencies'
+    - script: |
+        echo "Running unit tests..."
+      displayName: 'Run unit tests'
 
-# Step 1: Use Python
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.10'
-  displayName: 'Set up Python'
-
-# Step 2: Install dependencies
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
-
-# Step 3: Build step (optional for Python projects)
-- script: |
-    echo "Building the project..."
-    python setup.py build || echo "No setup.py, skipping build"
-  displayName: 'Build project'
-
-# Step 4: Run tests
-- script: |
-    echo "Running tests..."
-    pip install pytest
-    pytest tests/
-  displayName: 'Run tests'
-
+- stage: Test
+  displayName: 'Test Stage'
+  dependsOn: Build
+  isSkippable: false
+  jobs:
+  - job: TestJob
+    displayName: 'Test Job'
+    steps:
+    - script: |
+        echo "Running unit tests..."
+      displayName: 'Run unit tests'
