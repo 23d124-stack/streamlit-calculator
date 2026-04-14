@@ -1,0 +1,45 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+# Step 1: Use Python
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.10'
+  displayName: 'Set up Python'
+
+# Step 2: Install dependencies
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+# Step 3: Build step (optional for Python projects)
+- script: |
+    echo "Building the project..."
+    python setup.py build || echo "No setup.py, skipping build"
+  displayName: 'Build project'
+
+# Step 4: Run tests
+- script: |
+    echo "Running tests..."
+    pip install pytest
+    pytest tests/
+  displayName: 'Run tests'
+
+# Step 5: Linting (optional but recommended)
+- script: |
+    echo "Running lint checks..."
+    pip install flake8
+    flake8 .
+  displayName: 'Lint code'
+
+# Step 6: Run application (optional)
+- script: |
+    echo "Starting app..."
+    python app.py
+  displayName: 'Run application (optional)'
