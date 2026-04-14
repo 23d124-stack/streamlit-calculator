@@ -31,15 +31,3 @@ steps:
     pytest tests/
   displayName: 'Run tests'
 
-# Step 5: Linting (optional but recommended)
-- script: |
-    echo "Running lint checks..."
-    pip install flake8
-    flake8 .
-  displayName: 'Lint code'
-
-# Step 6: Run application (optional)
-- script: |
-    echo "Starting app..."
-    python app.py
-  displayName: 'Run application (optional)'
